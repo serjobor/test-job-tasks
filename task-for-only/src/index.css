@@ -5,14 +5,11 @@
 
   list-style: none;
   text-decoration: none;
-
-  /* border: solid 1px black; */
 }
 
 :root {
   --font-family: "PT Sans", sans-serif;
   --second-family: "Bebas Neue", sans-serif;
-  /* --third-family: "PT Sans Bold", sans-serif; */
 
   --line-style: rgba(66, 86, 122, 0.1);
 
@@ -46,7 +43,6 @@ body {
 }
 
 .horizontal-line {
-  /* top: 480px; */
   transform: translateY(480px);
   transform-origin: center center;
 
@@ -73,7 +69,6 @@ body {
 }
 
 .gradient-stick {
-  /* position: relative; */
   margin: 7px -2px;
 
   width: 6px;
@@ -98,7 +93,6 @@ body {
   position: absolute;
   display: flex;
   justify-content: space-between;
-  /* margin: 96px auto; */
   top: 400px;
   left: 217px;
   width: 969px;
@@ -124,9 +118,6 @@ body {
 
 .circle-container {
   position: relative;
-  /* display: flex; */
-  /* justify-content: center; */
-  /* align-items: center; */
 
   margin-left: 455px;
   margin-top: -90px;
@@ -165,16 +156,6 @@ body {
   color: var(--lead-color);
 }
 
-/* Магия позиционирования с помощью transform */
-/* Право */
-.dot-1 {
-  transform: rotate(0deg) translate(264px) rotate(0deg);
-}
-
-.dot-num {
-  opacity: 0;
-}
-
 .dot:hover {
   width: 56px;
   height: 56px;
@@ -186,32 +167,35 @@ body {
   cursor: pointer;
 }
 
+.dot-num {
+  opacity: 0;
+}
+
 .dot:hover .dot-num {
   opacity: 1;
   transition: 1s;
 } 
 
-/* Низ-право */
+.dot-1 {
+  transform: rotate(0deg) translate(264px) rotate(0deg);
+}
+
 .dot-2 {
   transform: rotate(60deg) translate(264px) rotate(-60deg);
 }
 
-/* Низ-лево */
 .dot-3 {
   transform: rotate(122deg) translate(266px) rotate(-122deg);
 }
 
-/* Лево */
 .dot-4 {
   transform: rotate(180deg) translate(264px) rotate(-180deg);
 }
 
-/* Верх-лево */
 .dot-5 {
   transform: rotate(240deg) translate(264px) rotate(-240deg);
 }
 
-/* Верх-право */
 .dot-6 {
   transform: rotate(294deg) translate(264px) rotate(-294deg);
 }
@@ -272,9 +256,7 @@ body {
   margin-top: 56px;
 
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
-
 }
 
 .slider-left-button,
@@ -312,7 +294,6 @@ body {
   width: 320px;
   height: 135px;
   margin-left: 80px;
-
 }
 
 .elem-title {
