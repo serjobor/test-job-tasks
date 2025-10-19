@@ -32,12 +32,14 @@ body {
 .main-container {
   border-right: solid 1px var(--line-style);
   border-left: solid 1px var(--line-style);
+
+  max-width: 1440px;
+  max-height: 1080px;
 }
 
 .horizontal-line,
 .vertical-line {
   position: relative;
-  width: 1080px;
 
   height: 2px;
   background-color: var(--line-style);
@@ -47,12 +49,16 @@ body {
   /* top: 480px; */
   transform: translateY(480px);
   transform-origin: center center;
+
+  max-height: 1440px;
 }
 
 .vertical-line {
   left: 720px;
   transform: rotate(90deg);
   transform-origin: top left;
+
+  max-width: 1080px;
 }
 
 .second-lable {
@@ -143,47 +149,10 @@ body {
   width: 6px;
   height: 6px;
   background-color: var(--lead-color);
-  color: white;
+  color: var(--lead-color);
+
+  border: solid 1px var(--lead-color);
   border-radius: 50%;
-}
-
-/* Магия позиционирования с помощью transform */
-/* Право */
-.dot-1 {
-  transform: rotate(0deg) translate(264px);
-}
-
-/* Низ-право */
-.dot-2 {
-  transform: rotate(60deg) translate(264px);
-}
-
-/* Низ-лево */
-.dot-3 {
-  transform: rotate(122deg) translate(266px);
-}
-
-/* Лево */
-.dot-4 {
-  transform: rotate(180deg) translate(264px);
-}
-
-/* Верх-лево */
-.dot-5 {
-  transform: rotate(240deg) translate(264px);
-}
-
-/* Верх-право */
-.dot-6 {
-  transform: rotate(294deg) translate(264px);
-}
-
-.choose-num {
-  width: 56px;
-  height: 56px;
-  border: solid 1px rgba(48, 62, 88, 0.5);
-  transform: translateX(107px) translateY(-236px);
-  background-color: rgba(0,0,0,0);
 
   display: flex;
   justify-content: center;
@@ -196,9 +165,67 @@ body {
   color: var(--lead-color);
 }
 
-.choose-num::before {
-  content: '6';
-  color: var(--lead-color);
+/* Магия позиционирования с помощью transform */
+/* Право */
+.dot-1 {
+  transform: rotate(0deg) translate(264px) rotate(0deg);
+}
+
+.dot-num {
+  opacity: 0;
+}
+
+.dot:hover {
+  width: 56px;
+  height: 56px;
+  border: solid 1px rgba(48, 62, 88, 0.5);
+  background-color: initial;
+  opacity: 1;
+
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.dot:hover .dot-num {
+  opacity: 1;
+  transition: 1s;
+} 
+
+/* Низ-право */
+.dot-2 {
+  transform: rotate(60deg) translate(264px) rotate(-60deg);
+}
+
+/* Низ-лево */
+.dot-3 {
+  transform: rotate(122deg) translate(266px) rotate(-122deg);
+}
+
+/* Лево */
+.dot-4 {
+  transform: rotate(180deg) translate(264px) rotate(-180deg);
+}
+
+/* Верх-лево */
+.dot-5 {
+  transform: rotate(240deg) translate(264px) rotate(-240deg);
+}
+
+/* Верх-право */
+.dot-6 {
+  transform: rotate(294deg) translate(264px) rotate(-294deg);
+}
+
+.choose-num {
+  width: 56px;
+  height: 56px;
+  border: solid 1px rgba(48, 62, 88, 0.5);
+  transform: translateX(107px) translateY(-236px);
+  background-color: initial;
+}
+
+.choose-num .dot-num {
+  opacity: 1;
 }
 
 .switch-container {
@@ -238,6 +265,7 @@ body {
 .selected-btn {
   border: solid 1px rgba(66, 86, 122, 1);
   stroke: rgba(66, 86, 122, 1);
+  cursor: pointer;
 }
 
 .slider-container {
@@ -266,11 +294,13 @@ body {
 
 .slider-left-button.active {
   display: block;
+  cursor: pointer;
 }
 
 .slider-rigth-button.active {
   display: block;
   margin-left: 80px;
+  cursor: pointer;
 }
 
 .slider {
