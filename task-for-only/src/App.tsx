@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, act } from 'react'
 import './App.css'
 import CircleList from './components/CircleList';
 import { mockData, type IMockData } from './mockData';
@@ -10,9 +10,18 @@ function App() {
     allPeriods.find(period => period.isChoose)?.periodNum ?? allPeriods[0].periodNum
   );
 
+  const [labelPeriodNum, setLabelPeriodNum] = useState<number>(activePeriodNum);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const circleRef = useRef<HTMLUListElement>(null);
+
   const active = useMemo(() => {
-    return allPeriods.find(period => period.periodNum === activePeriodNum)
-  }, [allPeriods, activePeriodNum]
+      return allPeriods.find(period => period.periodNum === activePeriodNum)
+    }, [allPeriods, activePeriodNum]
+  );
+
+  const labelPeriod = useMemo(() => {
+      return allPeriods.find(period => period.periodNum === labelPeriodNum)
+    }, [allPeriods, labelPeriodNum]
   );
 
   const periodCount = allPeriods.length;
@@ -35,7 +44,6 @@ function App() {
     const absoluteTarget = targetAngles[targetNum] as number;
   
     setAngleRotate(prev => {
-      
       let shortest = ((absoluteTarget - prev + 540) % 360) - 180;
   
       if (desiredDir === -1 && shortest > 0) shortest -= 360;
@@ -46,6 +54,7 @@ function App() {
   }
 
   const selectPeriod = (num: number) => {
+    setIsAnimating(true);
     setAllPeriods(prev =>
       prev.map(p => ({ ...p, isChoose: p.periodNum === num }))
     );
@@ -81,11 +90,25 @@ function App() {
         </h1>
 
         <div className='circle-container'>
-          <ul className='circle'
+          <span 
+            className='events-name'
+            style={{ opacity: isAnimating ? 0 : 1, transition: 'opacity 150ms ease'}}
+          >
+            {labelPeriod?.eventsName}
+          </span>
+          <ul
+            ref={circleRef} 
+            className='circle'
             style={{
               transform: `rotate(${angleRotate}deg)`,
               transformOrigin: 'center center',
               transition: 'transform 600ms ease-in-out'
+            }}
+            onTransitionEnd={(e) => {
+              if(e.target === circleRef.current) {
+                setLabelPeriodNum(activePeriodNum);
+                setIsAnimating(false);
+              }
             }}>
             {
               allPeriods.map((period, index) => {

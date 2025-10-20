@@ -123,6 +123,18 @@ body {
   margin-top: -90px;
 }
 
+.events-name {
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 150%;
+  color: var(--lead-color);
+
+  position: absolute;
+  top: 20px;
+  right: 470px;
+}
+
 .circle {
   position: relative;
   width: 530px;

@@ -13,6 +13,7 @@ const CircleList = ({ dotNum, position, isChoose, onClick }: CircleListProps) =>
       onClick={onClick}
       style={{
         transform: `${position}`,
+        transition: '300ms'
       }}
     >
       <span className='dot-num'>{dotNum}</span>
