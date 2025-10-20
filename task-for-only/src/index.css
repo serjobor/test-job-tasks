@@ -176,35 +176,10 @@ body {
   transition: 1s;
 } 
 
-.dot-1 {
-  transform: rotate(0deg) translate(264px) rotate(0deg);
-}
-
-.dot-2 {
-  transform: rotate(60deg) translate(264px) rotate(-60deg);
-}
-
-.dot-3 {
-  transform: rotate(122deg) translate(266px) rotate(-122deg);
-}
-
-.dot-4 {
-  transform: rotate(180deg) translate(264px) rotate(-180deg);
-}
-
-.dot-5 {
-  transform: rotate(240deg) translate(264px) rotate(-240deg);
-}
-
-.dot-6 {
-  transform: rotate(294deg) translate(264px) rotate(-294deg);
-}
-
 .choose-num {
   width: 56px;
   height: 56px;
   border: solid 1px rgba(48, 62, 88, 0.5);
-  transform: translateX(107px) translateY(-236px);
   background-color: initial;
 }
 
@@ -260,7 +235,7 @@ body {
 }
 
 .slider-left-button,
-.slider-rigth-button {
+.slider-right-button {
   display: none;
   border-radius: 100%;
   width: 40px;
@@ -279,7 +254,7 @@ body {
   cursor: pointer;
 }
 
-.slider-rigth-button.active {
+.slider-right-button.active {
   display: block;
   margin-left: 80px;
   cursor: pointer;
