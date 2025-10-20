@@ -1,7 +1,6 @@
 
 export interface IMockData {
   periodNum: number;
-  position: string;
   startData: number;
   endData: number;
   eventsName: string;
@@ -15,7 +14,6 @@ export interface IMockData {
 export const mockData: IMockData[] = [
   {
     periodNum: 1,
-    position: 'rotate(0deg) translate(264px) rotate(0deg)',
     startData: 1980,
     endData: 1986,
     eventsName: 'test 1',
@@ -53,7 +51,6 @@ export const mockData: IMockData[] = [
   },
   {
     periodNum: 2,
-    position: 'rotate(60deg) translate(264px) rotate(-60deg)',
     startData: 1987,
     endData: 1993,
     eventsName: 'test 2',
@@ -91,7 +88,6 @@ export const mockData: IMockData[] = [
   },
   {
     periodNum: 3,
-    position: 'rotate(120deg) translate(264px) rotate(-120deg)',
     startData: 1994,
     endData: 2000,
     eventsName: 'test 3',
@@ -129,7 +125,6 @@ export const mockData: IMockData[] = [
   },
   {
     periodNum: 4,
-    position: 'rotate(180deg) translate(264px) rotate(-180deg)',
     startData: 2001,
     endData: 2007,
     eventsName: 'test 4',
@@ -167,7 +162,6 @@ export const mockData: IMockData[] = [
   },
   {
     periodNum: 5,
-    position: 'rotate(240deg) translate(264px) rotate(-240deg)',
     startData: 2008,
     endData: 2014,
     eventsName: 'test 5',
@@ -205,7 +199,6 @@ export const mockData: IMockData[] = [
   },
   {
     periodNum: 6,
-    position: 'rotate(300deg) translate(264px) rotate(-300deg)',
     startData: 2015,
     endData: 2022,
     eventsName: 'Наука',

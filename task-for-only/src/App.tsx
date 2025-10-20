@@ -174,7 +174,7 @@ function App() {
               allPeriods.map((period, index) => {
                 const a = index * 60;
                 const b = -a - angleRotate;
-                const position = `rotate(${a}deg) translate(264px) rotate(${b}deg)`;
+                const position = `rotate(${a}deg) translate(265px) rotate(${b}deg)`;
                 return (
                   <CircleList
                     key={period.periodNum}
