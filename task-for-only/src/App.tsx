@@ -1,5 +1,4 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
-import './App.css'
 import CircleList from './components/CircleList';
 import { mockData, type IMockData } from './mockData';
 
