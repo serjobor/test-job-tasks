@@ -199,6 +199,7 @@ body {
   position: absolute;
   @include circle(var(--dot-size));
   background-color: var(--color-primary);
+  color: var(--color-primary);
   border: solid 1px var(--color-primary);
   @include flex-center();
   @include typography(20px, 400);
@@ -207,7 +208,7 @@ body {
   &:hover {
     @include circle(var(--dot-size-hover));
     border-color: var(--color-border);
-    background-color: initial;
+    background-color: var(--color-background);
     opacity: 1;
     cursor: pointer;
   }
@@ -215,8 +216,7 @@ body {
   &.choose-num {
     @include circle(var(--dot-size-active));
     border-color: var(--color-border);
-    background-color: initial;
-
+    background-color: var(--color-background);
     .dot-num {
       opacity: 1;
     }
@@ -248,7 +248,7 @@ body {
 .switch-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .right-switch,
@@ -270,13 +270,17 @@ body {
 
 // SLIDER
 .slider-container {
+  position: relative;
   margin-top: 56px;
   display: flex;
   align-items: center;
+
+  padding-left: 80px;
 }
 
 .slider-left-button,
 .slider-right-button {
+  position: absolute;
   display: none;
   @include circle(40px);
   border: none;
@@ -290,10 +294,18 @@ body {
     display: block;
     cursor: pointer;
   }
+
+  z-index: 10;
+}
+
+.slider-left-button.active {
+  top: 53px;
+  left: 20px;
 }
 
 .slider-right-button.active {
-  margin-left: 80px;
+  top: 53px;
+  right: 39px;
 }
 
 .slider {
@@ -301,11 +313,24 @@ body {
   justify-content: space-between;
 }
 
+.swiper-slide {
+  width: 320px !important;
+}
+
 .slider-elem {
   width: 320px;
   height: 135px;
-  margin-left: 80px;
+  // margin-left: 80px;
 }
+
+.swiper-slide:nth-child(2) {
+  width: 400px !important;
+}
+
+.swiper-slide:nth-child(3) {
+  margin-left: 0px !important;
+}
+
 
 .elem-title {
   @include typography(25px, 400, 120%, var(--color-accent-start));

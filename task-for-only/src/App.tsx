@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import CircleList from './components/CircleList';
 import { mockData, type IMockData } from './mockData';
+import SimpleSlider from './components/Slider';
 
 function App() {
 
@@ -214,40 +215,7 @@ function App() {
           </div>
         </div>
 
-        <div className='slider-container'>
-          <button className='slider-left-button'>
-            <svg width='10' height='14' viewBox='0 0 10 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
-              <path d='M8.49988 0.750001L2.24988 7L8.49988 13.25' strokeWidth='2' />
-            </svg>
-          </button>
-
-          <ul className='slider'>
-            <li className='slider-elem'>
-              <h3 className='elem-title'>2015</h3>
-              <p className='elem-text'>
-                13 сентября — частное солнечное затмение, видимое в Южной Африке и части Антарктиды
-              </p>
-            </li>
-            <li className='slider-elem' style={{ width: '400px' }}>
-              <h3 className='elem-title'>2016</h3>
-              <p className='elem-text'>
-                Телескоп «Хаббл» обнаружил самую удалённую из всех обнаруженных галактик, получившую обозначение GN-z11
-              </p>
-            </li>
-            <li className='slider-elem'>
-              <h3 className='elem-title'>2017</h3>
-              <p className='elem-text'>
-                Компания Tesla официально представила первый в мире электрический грузовик Tesla Semi
-              </p>
-            </li>
-          </ul>
-
-          <button className='slider-right-button active'>
-            <svg width='8' height='12' viewBox='0 0 8 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
-              <path d='M1 1L6 6L1 11' strokeWidth='2' />
-            </svg>
-          </button>
-        </div>
+        <SimpleSlider events={active?.events || []} />
 
       </div>
     </main>
