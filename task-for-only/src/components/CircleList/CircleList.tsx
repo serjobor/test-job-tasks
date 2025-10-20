@@ -9,7 +9,7 @@ const CircleList = ({ dotNum, position, isChoose, onClick }: CircleListProps) =>
   
   return (
     <li 
-      className={`dot choose-num ${isChoose ? 'choose-num' : ''}`}
+      className={`dot ${isChoose ? 'choose-num' : ''}`}
       onClick={onClick}
       style={{
         transform: `${position}`,

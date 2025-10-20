@@ -30,9 +30,19 @@ function App() {
 
   const [angleRotate, setAngleRotate] = useState(0);
 
-  function rotateCircle(num: number) {
-    const angle = targetAngles[num];
-    setAngleRotate(angle);
+  function rotateCircle(targetNum: number) {
+    const desiredDir = targetNum > activePeriodNum ? -1 : 1;
+    const absoluteTarget = targetAngles[targetNum] as number;
+  
+    setAngleRotate(prev => {
+      
+      let shortest = ((absoluteTarget - prev + 540) % 360) - 180;
+  
+      if (desiredDir === -1 && shortest > 0) shortest -= 360;
+      if (desiredDir === 1 && shortest < 0) shortest += 360;
+  
+      return prev + shortest;
+    });
   }
 
   const selectPeriod = (num: number) => {
