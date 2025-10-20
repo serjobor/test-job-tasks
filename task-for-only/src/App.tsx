@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, act } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import './App.css'
 import CircleList from './components/CircleList';
 import { mockData, type IMockData } from './mockData';
@@ -15,14 +15,62 @@ function App() {
   const circleRef = useRef<HTMLUListElement>(null);
 
   const active = useMemo(() => {
-      return allPeriods.find(period => period.periodNum === activePeriodNum)
-    }, [allPeriods, activePeriodNum]
+    return allPeriods.find(period => period.periodNum === activePeriodNum)
+  }, [allPeriods, activePeriodNum]
   );
 
   const labelPeriod = useMemo(() => {
-      return allPeriods.find(period => period.periodNum === labelPeriodNum)
-    }, [allPeriods, labelPeriodNum]
+    return allPeriods.find(period => period.periodNum === labelPeriodNum)
+  }, [allPeriods, labelPeriodNum]
   );
+
+  const [displayedStart, setDisplayedStart] = useState<number>(active?.startData ?? 0);
+  const [displayedEnd, setDisplayedEnd] = useState<number>(active?.endData ?? 0);
+
+  const rafRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+
+  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  function animateNumbers(
+    fromStart: number,
+    toStart: number,
+    fromEnd: number,
+    toEnd: number,
+    duration = 600
+  ) {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    startTimeRef.current = null;
+
+    const step = (ts: number) => {
+      if (!startTimeRef.current) startTimeRef.current = ts;
+      const elapsed = ts - startTimeRef.current;
+      const p = Math.min(1, elapsed / duration);
+      const k = easeOutCubic(p);
+
+      const curStart = Math.round(fromStart + (toStart - fromStart) * k);
+      const curEnd = Math.round(fromEnd + (toEnd - fromEnd) * k);
+
+      setDisplayedStart(curStart);
+      setDisplayedEnd(curEnd);
+
+      if (p < 1) {
+        rafRef.current = requestAnimationFrame(step);
+      } else {
+        rafRef.current = null;
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+  }
+
+  // вывод дат выбранного периода при первом рендере
+  useEffect(() => {
+    if (active) {
+      setDisplayedStart(active.startData);
+      setDisplayedEnd(active.endData);
+    }
+  }, []);
 
   const periodCount = allPeriods.length;
   const leftEnabled = activePeriodNum > 1;
@@ -42,13 +90,13 @@ function App() {
   function rotateCircle(targetNum: number) {
     const desiredDir = targetNum > activePeriodNum ? -1 : 1;
     const absoluteTarget = targetAngles[targetNum] as number;
-  
+
     setAngleRotate(prev => {
       let shortest = ((absoluteTarget - prev + 540) % 360) - 180;
-  
+
       if (desiredDir === -1 && shortest > 0) shortest -= 360;
       if (desiredDir === 1 && shortest < 0) shortest += 360;
-  
+
       return prev + shortest;
     });
   }
@@ -58,6 +106,19 @@ function App() {
     setAllPeriods(prev =>
       prev.map(p => ({ ...p, isChoose: p.periodNum === num }))
     );
+
+    // находим целевые значения до поворота
+    const target = allPeriods.find(p => p.periodNum === num);
+    if (target) {
+      animateNumbers(
+        displayedStart,
+        target.startData,
+        displayedEnd,
+        target.endData,
+        600 // длительность вращения круга
+      );
+    }
+
     rotateCircle(num);
     setActivePeriodNum(num);
   };
@@ -85,19 +146,19 @@ function App() {
         </div>
 
         <h1 className='main-lable'>
-          <span className='start-data-lable'>{active?.startData}</span>
-          <span className='end-data-lable'>{active?.endData}</span>
+          <span className='start-data-lable'>{displayedStart}</span>
+          <span className='end-data-lable'>{displayedEnd}</span>
         </h1>
 
         <div className='circle-container'>
-          <span 
+          <span
             className='events-name'
-            style={{ opacity: isAnimating ? 0 : 1, transition: 'opacity 150ms ease'}}
+            style={{ opacity: isAnimating ? 0 : 1, transition: 'opacity 150ms ease' }}
           >
             {labelPeriod?.eventsName}
           </span>
           <ul
-            ref={circleRef} 
+            ref={circleRef}
             className='circle'
             style={{
               transform: `rotate(${angleRotate}deg)`,
@@ -105,7 +166,7 @@ function App() {
               transition: 'transform 600ms ease-in-out'
             }}
             onTransitionEnd={(e) => {
-              if(e.target === circleRef.current) {
+              if (e.target === circleRef.current) {
                 setLabelPeriodNum(activePeriodNum);
                 setIsAnimating(false);
               }
