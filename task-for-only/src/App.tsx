@@ -227,12 +227,6 @@ function App() {
         </div>
 
         <div className='dot-container'>
-          {/* <span
-            className='events-name'
-            style={{ opacity: isAnimating ? 0 : 1, transition: 'opacity 150ms ease' }}
-          >
-            {labelPeriod?.eventsName}
-          </span> */}
           <ul
             ref={circleRef}
             className='dot-list'

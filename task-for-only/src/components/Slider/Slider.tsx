@@ -68,7 +68,6 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
         {events.map((event, index) => (
           <SwiperSlide key={index}>
             <div className="slider-elem"> 
-              {/* style={(index === 1) ? { width: '400px' } : {}} */}
               <h3 className="elem-title">{event.year}</h3>
               <p className="elem-text">{event.text}</p>
             </div>
