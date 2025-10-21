@@ -46,6 +46,16 @@
 - Node.js версии 16.0 или выше
 - npm версии 7.0 или выше
 
+### Клонирование репозитория
+```bash
+git clone https://github.com/serjobor/test-job-tasks.git
+```
+
+### Переход в папку task-for-only
+```bash
+cd .\test-job-tasks\task-for-only
+```
+
 ### Установка зависимостей
 ```bash
 npm install
