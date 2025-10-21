@@ -1,4 +1,4 @@
-# task-for-only [https://task-for-only.vercel.app/](Ссылка на деплой)
+# task-for-only [Ссылка на деплой](https://task-for-only.vercel.app/)
 ## Описание
 
 Реализовать следующий блок в соответствии с [макетом](https://disk.360.yandex.ru/d/sKdTKKjxMT06sg) (Файл с макетом необходимо импортировать в Figma) 
