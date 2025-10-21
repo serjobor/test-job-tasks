@@ -55,6 +55,21 @@ export default (env, argv) => {
             'style-loader',
             'css-loader',
           ],
+          exclude: /node_modules\/swiper/,
+        },
+        {
+          test: /\.css$/,
+          include: /node_modules\/swiper/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: false,
+                importLoaders: 1,
+              }
+            },
+          ],
         },
         {
           test: /\.(png|svg|jpg|jpeg|gif)$/i,
@@ -63,14 +78,6 @@ export default (env, argv) => {
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
           type: 'asset/resource',
-        },
-        {
-          test: /\.css$/,
-          include: /node_modules\/swiper/,
-          use: [
-            'style-loader',
-            'css-loader',
-          ],
         },
       ],
     },
