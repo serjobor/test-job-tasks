@@ -343,6 +343,25 @@ body {
   @include typography(20px, 400);
 }
 
+// DOT LIST
+
+.dot-container {
+  display: none;
+  width: 86px;
+  height: 6px;
+
+  position: absolute;
+  bottom: 70px;
+  left: 117px;
+
+} 
+
+.dot-list {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 // ADAPTIVE
 
 @media (width <= 320px ) {
@@ -411,7 +430,6 @@ body {
   }
 
   .circle-container {
-    // display: none;
     overflow: hidden;
   }
 
@@ -472,14 +490,7 @@ body {
       height: 80px;
       // margin-left: 80px;
     }
-    
-    // .swiper-slide:nth-child(2) {
-    //   width: 400px !important;
-    // }
-    
-    // .swiper-slide:nth-child(3) {
-    //   margin-left: 0px !important;
-    // }
+
 
     .elem-title {
       @include typography(16px, 400, 120%, var(--color-accent-start));
@@ -490,5 +501,51 @@ body {
       margin-top: 15px;
       @include typography(14px, 400);
     }
+  }
+
+  .dot-container {
+    display: block;
+  }
+  
+  .dot {
+    position: static;
+
+    @include circle(6px);
+    background-color: rgba(66, 86, 122, 0.4);
+    color: rgba(66, 86, 122, 0.4);
+    border: none;
+    @include flex-center();
+    @include typography(20px, 400);
+    @include transition();
+  
+    &:hover {
+      @include circle(6px);
+      border-color: var(--color-border);
+      background-color: var(--color-background);
+      opacity: 1;
+      cursor: pointer;
+    }
+  
+    &.choose-num {
+      @include circle(6px);
+      // border-color: var(--color-border);
+      // background-color: var(--color-background);
+
+      background-color: var(--color-primary);
+      color: var(--color-primary);
+      border: solid 1px var(--color-primary);
+      .dot-num {
+        opacity: 0;
+      }
+    }
+  }
+  
+  .dot-num {
+    opacity: 0;
+    @include transition(opacity, var(--transition-slow));
+  }
+  
+  .dot:hover .dot-num {
+    opacity: 0;
   }
 }

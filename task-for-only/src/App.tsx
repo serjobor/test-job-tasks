@@ -121,6 +121,10 @@ function App() {
 
     rotateCircle(num);
     setActivePeriodNum(num);
+
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 600);
   };
 
   const goLeft = () => {
@@ -220,6 +224,38 @@ function App() {
           style={{ opacity: isAnimating ? 0 : 1 }}
         >
           <SimpleSlider events={active?.events || []} />
+        </div>
+
+        <div className='dot-container'>
+          {/* <span
+            className='events-name'
+            style={{ opacity: isAnimating ? 0 : 1, transition: 'opacity 150ms ease' }}
+          >
+            {labelPeriod?.eventsName}
+          </span> */}
+          <ul
+            ref={circleRef}
+            className='dot-list'
+            onTransitionEnd={(e) => {
+              if (e.target === circleRef.current) {
+                setLabelPeriodNum(activePeriodNum);
+                setIsAnimating(false);
+              }
+            }}>
+            {
+              allPeriods.map((period) => {
+                return (
+                  <CircleList
+                    key={period.periodNum}
+                    dotNum={period.periodNum}
+                    position={''}
+                    isChoose={period.isChoose}
+                    onClick={() => selectPeriod(period.periodNum)}
+                  />
+                );
+              })
+            }
+          </ul>
         </div>
 
       </div>
