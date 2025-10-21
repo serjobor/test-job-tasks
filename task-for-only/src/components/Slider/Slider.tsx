@@ -48,17 +48,27 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
       <Swiper
         ref={swiperRef}
         modules={[Navigation]}
-        spaceBetween={80}
-        slidesPerView={3}
         navigation={false}
         className="slider"
         onSlideChange={handleSlideChange}
-        // onSwiper={handleSwiperInit}
         onSwiper={setSwiper}
+        breakpoints={{
+          // Для экранов от 0px
+          0: {
+            spaceBetween: 25,
+            slidesPerView: 2,
+          },
+          // Для экранов от 325px
+          325: {
+            spaceBetween: 80,
+            slidesPerView: 3,
+          },
+        }}
       >
         {events.map((event, index) => (
           <SwiperSlide key={index}>
-            <div className="slider-elem" style={(index === 1) ? { width: '400px' } : {}}>
+            <div className="slider-elem"> 
+              {/* style={(index === 1) ? { width: '400px' } : {}} */}
               <h3 className="elem-title">{event.year}</h3>
               <p className="elem-text">{event.text}</p>
             </div>

@@ -342,3 +342,153 @@ body {
   margin-top: 15px;
   @include typography(20px, 400);
 }
+
+// ADAPTIVE
+
+@media (width <= 320px ) {
+  .main {
+    margin: 0;
+  }
+
+  .main-container {
+    border: none;
+  }
+
+  .horizontal-line {
+    width: 280px;
+
+    position: absolute;
+
+    top: -247px;
+    left: 20px;
+
+  }
+
+  .vertical-line {
+    display: none;
+  }
+
+  .second-lable {
+    margin: 59px 20px;
+    width: 123px;
+    height: 48px;
+
+  }
+  
+  .gradient-stick {
+    display: none;
+  }
+  
+  .history-date-title {
+    @include typography(20px, 700, 120%);
+    width: 353px;
+    height: 134px;
+    text-align: left;
+  }
+
+  .main-lable {
+    // top: var(--title-top);
+    // left: var(--title-left);
+    width: 273px;
+
+    position: absolute;
+    top: 115px;
+    left: 20px;
+
+  }
+  
+  .start-data-lable,
+  .end-data-lable {
+    @include typography(56px, 700, 80%);
+  }
+
+  .start-data-lable {
+    color: var(--color-accent-start);
+  }
+  
+  .end-data-lable {
+    color: var(--color-accent-end);
+  }
+
+  .circle-container {
+    // display: none;
+    overflow: hidden;
+  }
+
+  .switch-container {
+    margin-left: 20px;
+  
+    width: 59px;
+    height: 50px;
+
+    position: absolute;
+    top: 490px;
+    
+  }
+  
+  .switch-buttons {
+    margin-top: 6px;
+  }
+  
+  .right-switch,
+  .left-switch {
+    @include circle(25px);
+
+    & svg {
+      width: 6px;
+      height: 8px;
+    }
+  }
+
+  .slider-container {
+    position: absolute;
+    top: 254px;
+    left: 20px;
+
+    width: 320px;
+
+    margin: 0px;
+    padding: 0px;
+
+    .slider-left-button {
+      display: none;
+    }
+
+    .slider-right-button {
+      display: none;
+    }
+
+    .slider {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .swiper-slide {
+      width: 166px !important;
+    }
+    
+    .slider-elem {
+      width: 166px;
+      height: 80px;
+      // margin-left: 80px;
+    }
+    
+    // .swiper-slide:nth-child(2) {
+    //   width: 400px !important;
+    // }
+    
+    // .swiper-slide:nth-child(3) {
+    //   margin-left: 0px !important;
+    // }
+
+    .elem-title {
+      @include typography(16px, 400, 120%, var(--color-accent-start));
+      font-family: var(--font-secondary);
+    }
+    
+    .elem-text {
+      margin-top: 15px;
+      @include typography(14px, 400);
+    }
+  }
+}
