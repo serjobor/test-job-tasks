@@ -215,7 +215,12 @@ function App() {
           </div>
         </div>
 
-        <SimpleSlider events={active?.events || []} />
+        <div 
+          className='slider-container'
+          style={{ opacity: isAnimating ? 0 : 1 }}
+        >
+          <SimpleSlider events={active?.events || []} />
+        </div>
 
       </div>
     </main>

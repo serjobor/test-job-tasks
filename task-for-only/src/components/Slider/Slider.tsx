@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -19,6 +19,13 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
 
+  const [swiper, setSwiper] = useState<any>(null);
+  useEffect(() => {
+    if (swiper) {
+      swiper.slideTo(0, 0);
+    }
+  }, events);
+
   const goToPrev = () => {
     if (swiperRef.current) {
       swiperRef.current.swiper.slidePrev();
@@ -36,13 +43,8 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
     setIsEnd(swiper.isEnd);
   };
 
-  const handleSwiperInit = (swiper: any) => {
-    setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
-  };
-
   return (
-    <div className='slider-container'>
+    <>
       <Swiper
         ref={swiperRef}
         modules={[Navigation]}
@@ -51,11 +53,12 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
         navigation={false}
         className="slider"
         onSlideChange={handleSlideChange}
-        onSwiper={handleSwiperInit}
+        // onSwiper={handleSwiperInit}
+        onSwiper={setSwiper}
       >
         {events.map((event, index) => (
           <SwiperSlide key={index}>
-            <div className="slider-elem" style={(index === 1) ? {width: '400px'}: {}}>
+            <div className="slider-elem" style={(index === 1) ? { width: '400px' } : {}}>
               <h3 className="elem-title">{event.year}</h3>
               <p className="elem-text">{event.text}</p>
             </div>
@@ -63,7 +66,7 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
         ))}
       </Swiper>
 
-      <button 
+      <button
         className={`slider-left-button ${isBeginning ? 'hidden' : 'active'}`}
         onClick={goToPrev}
         disabled={isBeginning}
@@ -73,8 +76,8 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
         </svg>
       </button>
 
-      <button 
-        className={`slider-right-button ${isEnd ? 'hidden' : 'active'}`} 
+      <button
+        className={`slider-right-button ${isEnd ? 'hidden' : 'active'}`}
         onClick={goToNext}
         disabled={isEnd}
       >
@@ -82,7 +85,7 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
           <path d='M1 1L6 6L1 11' strokeWidth='2' />
         </svg>
       </button>
-    </div>
+    </>
   );
 };
 
