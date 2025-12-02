@@ -14,7 +14,6 @@ app.use(express.json());
 // Конфигурация CORS
 const corsOptions = {
   origin: 'http://localhost:5173',
-  origin: 'evercode-lab-client-pi.vercel.app',
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
