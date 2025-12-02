@@ -10,7 +10,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'evercode-lab-server.vercel.app',
+        // target: 'http://localhost:3000',
         changeOrigin: true,
       }
     }
