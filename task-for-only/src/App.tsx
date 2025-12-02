@@ -1,260 +1,156 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
-import CircleList from './components/CircleList';
-import { mockData, type IMockData } from './mockData';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { mockData } from './mockData';
+import { IPeriod } from './types';
+import { useNumberAnimation } from './hooks/useNumberAnimation';
+import { useCircleState } from './hooks/useCircleState';
+import { ANIMATION_DURATION } from './constants';
+
+// Components
+import TimelineCircle from './components/TimelineCircle';
+import DateDisplay from './components/DateDisplay';
+import NavigationControls from './components/NavigationControls';
 import SimpleSlider from './components/Slider';
+import MobileDots from './components/MobileDots';
 
-function App() {
-
-  const [allPeriods, setAllPeriods] = useState<IMockData[]>(mockData);
-  const [activePeriodNum, setActivePeriodNum] = useState<number>(
-    allPeriods.find(period => period.isChoose)?.periodNum ?? allPeriods[0].periodNum
-  );
-
-  const [labelPeriodNum, setLabelPeriodNum] = useState<number>(activePeriodNum);
+const App = () => {
+  // State management
+  const [allPeriods, setAllPeriods] = useState<IPeriod[]>(mockData);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const circleRef = useRef<HTMLUListElement>(null);
 
-  const active = useMemo(() => {
-    return allPeriods.find(period => period.periodNum === activePeriodNum)
-  }, [allPeriods, activePeriodNum]
+  // Find initial active period
+  const initialActivePeriod = useMemo(() => 
+    allPeriods.find(period => period.isChoose)?.periodNum ?? allPeriods[0].periodNum,
+    [allPeriods]
   );
 
-  const labelPeriod = useMemo(() => {
-    return allPeriods.find(period => period.periodNum === labelPeriodNum)
-  }, [allPeriods, labelPeriodNum]
+  // Custom hooks
+  const { displayedStart, displayedEnd, animateNumbers, setDisplayedValues } = useNumberAnimation();
+  const { 
+    angleRotate, 
+    activePeriodNum, 
+    labelPeriodNum, 
+    rotateCircle, 
+    setActivePeriod, 
+    setLabelPeriod 
+  } = useCircleState(initialActivePeriod);
+
+  // Computed values
+  const activePeriod = useMemo(() => 
+    allPeriods.find(period => period.periodNum === activePeriodNum),
+    [allPeriods, activePeriodNum]
   );
 
-  const [displayedStart, setDisplayedStart] = useState<number>(active?.startData ?? 0);
-  const [displayedEnd, setDisplayedEnd] = useState<number>(active?.endData ?? 0);
+  const periodCount = allPeriods.length;
 
-  const rafRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number | null>(null);
-
-  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-
-  function animateNumbers(
-    fromStart: number,
-    toStart: number,
-    fromEnd: number,
-    toEnd: number,
-    duration = 600
-  ) {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    startTimeRef.current = null;
-
-    const step = (ts: number) => {
-      if (!startTimeRef.current) startTimeRef.current = ts;
-      const elapsed = ts - startTimeRef.current;
-      const p = Math.min(1, elapsed / duration);
-      const k = easeOutCubic(p);
-
-      const curStart = Math.round(fromStart + (toStart - fromStart) * k);
-      const curEnd = Math.round(fromEnd + (toEnd - fromEnd) * k);
-
-      setDisplayedStart(curStart);
-      setDisplayedEnd(curEnd);
-
-      if (p < 1) {
-        rafRef.current = requestAnimationFrame(step);
-      } else {
-        rafRef.current = null;
-      }
-    };
-
-    rafRef.current = requestAnimationFrame(step);
-  }
-
-  // вывод дат выбранного периода при первом рендере
+  // Initialize displayed values on first render
   useEffect(() => {
-    if (active) {
-      setDisplayedStart(active.startData);
-      setDisplayedEnd(active.endData);
+    if (activePeriod) {
+      setDisplayedValues(activePeriod.startData, activePeriod.endData);
     }
   }, []);
 
-  const periodCount = allPeriods.length;
-  const leftEnabled = activePeriodNum > 1;
-  const rightEnabled = activePeriodNum < periodCount;
-
-  const targetAngles: any = {
-    '1': -60,
-    '2': -120,
-    '3': -180,
-    '4': -240,
-    '5': -300,
-    '6': 0
-  };
-
-  const [angleRotate, setAngleRotate] = useState(0);
-
-  function rotateCircle(targetNum: number) {
-    const desiredDir = targetNum > activePeriodNum ? -1 : 1;
-    const absoluteTarget = targetAngles[targetNum] as number;
-
-    setAngleRotate(prev => {
-      let shortest = ((absoluteTarget - prev + 540) % 360) - 180;
-
-      if (desiredDir === -1 && shortest > 0) shortest -= 360;
-      if (desiredDir === 1 && shortest < 0) shortest += 360;
-
-      return prev + shortest;
-    });
-  }
-
-  const selectPeriod = (num: number) => {
+  // Period selection handler
+  const selectPeriod = useCallback((num: number) => {
     setIsAnimating(true);
+    
+    // Update periods state
     setAllPeriods(prev =>
       prev.map(p => ({ ...p, isChoose: p.periodNum === num }))
     );
 
-    // находим целевые значения до поворота
-    const target = allPeriods.find(p => p.periodNum === num);
-    if (target) {
+    // Find target period for animation
+    const targetPeriod = allPeriods.find(p => p.periodNum === num);
+    if (targetPeriod) {
       animateNumbers(
         displayedStart,
-        target.startData,
+        targetPeriod.startData,
         displayedEnd,
-        target.endData,
-        600 // длительность вращения круга
+        targetPeriod.endData,
+        ANIMATION_DURATION
       );
     }
 
-    rotateCircle(num);
-    setActivePeriodNum(num);
+    // Rotate circle and update active period
+    rotateCircle(num, activePeriodNum);
+    setActivePeriod(num);
 
+    // Reset animation state after duration
     setTimeout(() => {
       setIsAnimating(false);
-    }, 600);
-  };
+    }, ANIMATION_DURATION);
+  }, [allPeriods, displayedStart, displayedEnd, animateNumbers, rotateCircle, activePeriodNum, setActivePeriod]);
 
-  const goLeft = () => {
-    if (!leftEnabled) return;
-    selectPeriod(activePeriodNum - 1);
-  };
+  // Navigation handlers
+  const goLeft = useCallback(() => {
+    if (activePeriodNum > 1) {
+      selectPeriod(activePeriodNum - 1);
+    }
+  }, [activePeriodNum, selectPeriod]);
 
-  const goRight = () => {
-    if (!rightEnabled) return;
-    selectPeriod(activePeriodNum + 1);
-  };
+  const goRight = useCallback(() => {
+    if (activePeriodNum < periodCount) {
+      selectPeriod(activePeriodNum + 1);
+    }
+  }, [activePeriodNum, periodCount, selectPeriod]);
+
+  // Transition end handler
+  const handleTransitionEnd = useCallback(() => {
+    setLabelPeriod(activePeriodNum);
+    setIsAnimating(false);
+  }, [activePeriodNum, setLabelPeriod]);
 
   return (
-    <main className='main'>
-      <div className='main-container'>
+    <main className="main">
+      <div className="main-container">
+        {/* Decorative lines */}
+        <div className="horizontal-line"></div>
+        <div className="vertical-line"></div>
 
-        <div className='horizontal-line'></div>
-        <div className='vertical-line'></div>
-
-        <div className='second-lable'>
-          <div className='gradient-stick'></div>
-          <h2 className='history-date-title'>Исторические даты</h2>
+        {/* Header section */}
+        <div className="second-lable">
+          <div className="gradient-stick"></div>
+          <h2 className="history-date-title">Исторические даты</h2>
         </div>
 
-        <h1 className='main-lable'>
-          <span className='start-data-lable'>{displayedStart}</span>
-          <span className='end-data-lable'>{displayedEnd}</span>
-        </h1>
+        {/* Date display */}
+        <DateDisplay startYear={displayedStart} endYear={displayedEnd} />
 
-        <div className='circle-container'>
-          <span
-            className='events-name'
-            style={{ opacity: isAnimating ? 0 : 1, transition: 'opacity 150ms ease' }}
-          >
-            {labelPeriod?.eventsName}
-          </span>
-          <ul
-            ref={circleRef}
-            className='circle'
-            style={{
-              transform: `rotate(${angleRotate}deg)`,
-              transformOrigin: 'center center',
-              transition: 'transform 600ms ease-in-out'
-            }}
-            onTransitionEnd={(e) => {
-              if (e.target === circleRef.current) {
-                setLabelPeriodNum(activePeriodNum);
-                setIsAnimating(false);
-              }
-            }}>
-            {
-              allPeriods.map((period, index) => {
-                const a = index * 60;
-                const b = -a - angleRotate;
-                const position = `rotate(${a}deg) translate(265px) rotate(${b}deg)`;
-                return (
-                  <CircleList
-                    key={period.periodNum}
-                    dotNum={period.periodNum}
-                    position={position}
-                    isChoose={period.isChoose}
-                    onClick={() => selectPeriod(period.periodNum)}
-                  />
-                );
-              })
-            }
-          </ul>
-        </div>
+        {/* Timeline circle */}
+        <TimelineCircle
+          periods={allPeriods}
+          angleRotate={angleRotate}
+          activePeriodNum={activePeriodNum}
+          labelPeriodNum={labelPeriodNum}
+          isAnimating={isAnimating}
+          onPeriodSelect={selectPeriod}
+          onTransitionEnd={handleTransitionEnd}
+        />
 
-        <div className='switch-container'>
-          <div className='selected-switch'>0{activePeriodNum}/06</div>
-          <div className='switch-buttons'>
-            <button
-              className={`left-switch ${(leftEnabled) ? 'selected-btn' : ''}`}
-              onClick={goLeft}
-              disabled={!leftEnabled}
-              aria-disabled={!leftEnabled}
-            >
-              <svg width='10' height='14' viewBox='0 0 10 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M8.49988 0.750001L2.24988 7L8.49988 13.25' strokeWidth='2' />
-              </svg>
-            </button>
-            <button
-              className={`right-switch ${(rightEnabled) ? 'selected-btn' : ''}`}
-              onClick={goRight}
-              disabled={!rightEnabled}
-              aria-disabled={!rightEnabled}>
-              <svg width='10' height='14' viewBox='0 0 10 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M1.50012 0.750001L7.75012 7L1.50012 13.25' strokeWidth='2' />
-              </svg>
-            </button>
-          </div>
-        </div>
+        {/* Navigation controls */}
+        <NavigationControls
+          activePeriodNum={activePeriodNum}
+          totalPeriods={periodCount}
+          onPrevious={goLeft}
+          onNext={goRight}
+        />
 
+        {/* Events slider */}
         <div 
-          className='slider-container'
+          className="slider-container"
           style={{ opacity: isAnimating ? 0 : 1 }}
         >
-          <SimpleSlider events={active?.events || []} />
+          <SimpleSlider events={activePeriod?.events || []} />
         </div>
 
-        <div className='dot-container'>
-          <ul
-            ref={circleRef}
-            className='dot-list'
-            onTransitionEnd={(e) => {
-              if (e.target === circleRef.current) {
-                setLabelPeriodNum(activePeriodNum);
-                setIsAnimating(false);
-              }
-            }}>
-            {
-              allPeriods.map((period) => {
-                return (
-                  <CircleList
-                    key={period.periodNum}
-                    dotNum={period.periodNum}
-                    position={''}
-                    isChoose={period.isChoose}
-                    onClick={() => selectPeriod(period.periodNum)}
-                  />
-                );
-              })
-            }
-          </ul>
-        </div>
-
+        {/* Mobile dots indicator */}
+        <MobileDots
+          periods={allPeriods}
+          activePeriodNum={activePeriodNum}
+          onPeriodSelect={selectPeriod}
+        />
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default App
+export default App;

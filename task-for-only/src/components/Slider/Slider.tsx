@@ -1,20 +1,12 @@
+import { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import { useEffect, useRef, useState } from 'react';
+import { SliderProps, IEvent } from '../../types';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-interface IEvent {
-  year: number;
-  text: string;
-}
-
-interface SimpleSliderProps {
-  events: IEvent[];
-}
-
-const SimpleSlider = ({ events }: SimpleSliderProps) => {
+const SimpleSlider = ({ events }: SliderProps) => {
   const swiperRef = useRef<any>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -65,7 +57,7 @@ const SimpleSlider = ({ events }: SimpleSliderProps) => {
           },
         }}
       >
-        {events.map((event, index) => (
+        {events.map((event: IEvent, index: number) => (
           <SwiperSlide key={index}>
             <div className="slider-elem"> 
               <h3 className="elem-title">{event.year}</h3>
